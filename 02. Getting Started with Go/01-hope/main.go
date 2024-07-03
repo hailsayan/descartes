@@ -1,29 +1,20 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"os"
-	"strconv"
-	"strings"
 )
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	line := scanner.Text()
-
-	values := strings.Split(line, " ")
-	p, _ := strconv.Atoi(values[0])
-	q, _ := strconv.Atoi(values[1])
+	var p, q int
+	fmt.Scanf("%d %d", &p, &q)
 
 	for i := 1; i <= q; i++ {
 		if i%p == 0 {
 			count := i / p
-			for j := 0; j < count; j++ {
-				fmt.Print("Hope ")
+			for j := 0; j < count-1; j++ {
+				fmt.Printf("%s ", "Hope")
 			}
-			fmt.Println()
+			fmt.Printf("Hope\n")
 		} else {
 			fmt.Println(i)
 		}
