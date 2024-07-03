@@ -8,46 +8,40 @@ import (
 	"strings"
 )
 
-// X >= 80 returns Excellent
-// X >= 60 && X < 80 returns Very Good
-// X >= 40 && X < 60 returns Good
-// else returns Fair
-
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-	scanner.Scan()
-	words := strings.Fields(scanner.Text())
 
-	n, _ := strconv.Atoi(words[0])
+	teacherNames := []string{}
+	scores := []float64{}
+
+	scanner.Scan()
+	n, _ := strconv.Atoi(scanner.Text())
 
 	for i := 0; i < n; i++ {
-		// teachers
 		scanner.Scan()
-		teacherName := scanner.Text()
-
-		// students' percentages
+		teacherNames = append(teacherNames, scanner.Text())
 		scanner.Scan()
-		words = strings.Fields(scanner.Text())
+		scoreSlice := strings.Split(scanner.Text(), " ")
 
-		total := 0
-		for _, word := range words {
-			score, _ := strconv.Atoi(word)
-			total += score
+		sum := 0
+		for _, score := range scoreSlice {
+			s, _ := strconv.Atoi(score)
+			sum += s
 		}
-
-		average := float64(total) / float64(len(words))
-
-		evaluation := ""
-		if average >= 80 {
-			evaluation = "Excellent"
-		} else if average >= 60 {
-			evaluation = "Very Good"
-		} else if average >= 40 {
-			evaluation = "Good"
-		} else {
-			evaluation = "Fair"
-		}
-		fmt.Printf("%s %s\n", teacherName, evaluation)
+		scores = append(scores, float64(sum/len(scoreSlice)))
 	}
 
+	for i := 0; i < len(scores); i++ {
+		v := scores[i]
+
+		if v >= 80 {
+			fmt.Printf("%s Excellent\n", teacherNames[i])
+		} else if v >= 60 {
+			fmt.Printf("%s Very Good\n", teacherNames[i])
+		} else if v >= 40 {
+			fmt.Printf("%s Good\n", teacherNames[i])
+		} else {
+			fmt.Printf("%s Fair\n", teacherNames[i])
+		}
+	}
 }
