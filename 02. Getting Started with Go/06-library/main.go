@@ -9,47 +9,45 @@ import (
 	"strings"
 )
 
-type Book struct {
-	ISBN  int
-	Title string
-}
-
 func main() {
-	reader := bufio.NewReader(os.Stdin)
-	nStr, _ := reader.ReadString('\n')
-	n, _ := strconv.Atoi(strings.TrimSpace(nStr))
+	scanner := bufio.NewScanner(os.Stdin)
+	scanner.Scan()
+	n, _ := strconv.Atoi(scanner.Text())
 
-	library := make(map[int]string)
+	books := make(map[int]string)
 
 	for i := 0; i < n; i++ {
-		line, _ := reader.ReadString('\n')
-		parts := strings.Fields(line)
+		scanner.Scan()
+		inp := scanner.Text()
+		inpSpl := strings.SplitN(inp, " ", 3) // Use SplitN to correctly handle titles with spaces
 
-		command := parts[0]
-		isbn, _ := strconv.Atoi(parts[1])
+		command := inpSpl[0]
+		isbn, _ := strconv.Atoi(inpSpl[1])
 
 		if command == "ADD" {
-			title := strings.Join(parts[2:], " ")
-			library[isbn] = title
+			if len(inpSpl) == 3 {
+				title := inpSpl[2]
+				books[isbn] = title
+			}
 		} else if command == "REMOVE" {
-			delete(library, isbn)
+			delete(books, isbn)
 		}
 	}
 
-	var books []Book
-	for isbn, title := range library {
-		books = append(books, Book{ISBN: isbn, Title: title})
+	var isbns []int
+	for isbn := range books {
+		isbns = append(isbns, isbn)
 	}
 
-	sort.Slice(books, func(i, j int) bool {
-		if books[i].Title == books[j].Title {
-			return books[i].ISBN < books[j].ISBN
+	sort.Slice(isbns, func(i, j int) bool {
+		titleI, titleJ := books[isbns[i]], books[isbns[j]]
+		if titleI == titleJ {
+			return isbns[i] < isbns[j] // Sort by ISBN if titles are the same
 		}
-		return books[i].Title < books[j].Title
+		return titleI < titleJ // Sort by title alphabetically
 	})
 
-	for _, book := range books {
-		fmt.Println(book.ISBN)
+	for _, isbn := range isbns {
+		fmt.Println(isbn)
 	}
-
 }

@@ -4,60 +4,41 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
 
-type SpaceShip struct {
-	Name            string
-	ArithmeticCount int
-}
-
-func countArithmeticSequences(data []int) int {
-	count := 0
-	n := len(data)
-	for i := 0; i < n-2; i++ {
-		diff := data[i+1] - data[i]
-		for j := i + 2; j < n; j++ {
-			if data[j]-data[j-1] == diff {
-				count++
-			} else {
-				break
-			}
-		}
-	}
-	return count
-}
-
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-
 	scanner.Scan()
 	n, _ := strconv.Atoi(scanner.Text())
-
-	spaceships := make([]SpaceShip, 0, n)
-
 	for i := 0; i < n; i++ {
 		scanner.Scan()
-		words := strings.Fields(scanner.Text())
-		name := words[0]
-		fuelData := make([]int, len(words)-1)
-		for j := 1; j < len(words); j++ {
-			fuelData[j-1], _ = strconv.Atoi(words[j])
+		inp := scanner.Text()
+		inpSplit := strings.Split(inp, " ")
+		nums := make([]int, 0)
+		for j := 1; j < len(inpSplit); j++ {
+			tmp, _ := strconv.Atoi(inpSplit[j])
+			nums = append(nums, tmp)
 		}
-		count := countArithmeticSequences(fuelData)
-		spaceships = append(spaceships, SpaceShip{Name: name, ArithmeticCount: count})
-	}
-
-	sort.Slice(spaceships, func(i, j int) bool {
-		if spaceships[i].ArithmeticCount == spaceships[j].ArithmeticCount {
-			return spaceships[i].Name < spaceships[j].Name
+		count := 0
+		for j := 0; j < len(nums)-2; j++ {
+			diff1 := nums[j+1] - nums[j]
+			diff2 := nums[j+2] - nums[j+1]
+			if diff1 != diff2 {
+				continue
+			}
+			count++
+			prev := nums[j+2]
+			for k := j + 3; k < len(nums); k++ {
+				if nums[k]-prev == diff1 {
+					count++
+					prev = nums[k]
+				} else {
+					break
+				}
+			}
 		}
-		return spaceships[i].ArithmeticCount > spaceships[j].ArithmeticCount
-	})
-
-	for _, spaceship := range spaceships {
-		fmt.Printf("%s %d\n", spaceship.Name, spaceship.ArithmeticCount)
+		fmt.Printf("%s %d\n", inpSplit[0], count)
 	}
 }

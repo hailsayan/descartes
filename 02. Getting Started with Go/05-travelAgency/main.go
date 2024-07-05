@@ -1,53 +1,31 @@
 package main
 
-import (
-	"bufio"
-	"fmt"
-	"os"
-	"strings"
-)
+import "fmt"
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
-
-	scanner.Scan()
-	n := parseInt(scanner.Text())
-
-	countryCodes := make(map[string]string)
-
-	for i := 0; i < n; i++ {
-		scanner.Scan()
-		line := scanner.Text()
-		parts := strings.Split(line, " ")
-		country := parts[0]
-		code := parts[1]
-		countryCodes[code] = country
+	var n int
+	fmt.Scanf("%d", &n)
+	var m = make(map[string]string)
+	for i:=0; i<n; i++ {
+		var c1, c2 string
+		fmt.Scanf("%s %s", &c1, &c2)
+		m[c2] = c1
 	}
-
-	scanner.Scan()
-	q := parseInt(scanner.Text())
-
-	for i := 0; i < q; i++ {
-		scanner.Scan()
-		phone := scanner.Text()
-		found := false
-
-		for code, country := range countryCodes {
-			if strings.HasPrefix(phone, code) {
-				fmt.Println(country)
-				found = true
-				break
-			}
-		}
-
-		if !found {
-			fmt.Println("Invalid Number")
+	var q int
+	fmt.Scanf("%d", &q)
+	res := []string{}
+	for i:=0; i<q; i++ {
+		var phone string
+		fmt.Scanf("%s", &phone)
+		c, ok := m[phone[:3]]
+		if ok {
+			res = append(res, c)
+		} else {
+			res = append(res, "Invalid Number")
 		}
 	}
-}
 
-func parseInt(s string) int {
-	var num int
-	fmt.Sscanf(s, "%d", &num)
-	return num
+	for _, r := range(res) {
+		fmt.Println(r)
+	}
 }
