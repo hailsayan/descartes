@@ -1,31 +1,24 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 )
 
-func ConvertToDigitalFormat(hour, minute, second int) string {
-	hh := strconv.Itoa(hour)
-	mm := strconv.Itoa(minute)
-	ss := strconv.Itoa(second)
-	
-	if hour < 10{
-	    hh = "0" + hh
+func addZero(number int) string {
+	if number < 10 {
+		return "0" + strconv.Itoa(number)
 	}
-	if minute < 10 {
-	    mm = "0" + mm
-	}
-	if second < 10 {
-	    ss = "0" + ss
-	}
-	
-	return hh + ":" + mm + ":" + ss
+	return strconv.Itoa(number)
 }
 
+func ConvertToDigitalFormat(hour, minute, second int) string {
+	return fmt.Sprintf("%s:%s:%s", addZero(hour), addZero(minute), addZero(second))
+}
 func ExtractTimeUnits(seconds int) (int, int, int) {
-	hour := seconds / 3600
-	minutes := (seconds % 3600 ) / 60
-	second := seconds % 60
-	
-	return hour, minutes, second
+	hour := int(seconds / 3600)
+	seconds %= 3600
+	minute := int(seconds / 60)
+	seconds %= 60
+	return hour, minute, seconds
 }
